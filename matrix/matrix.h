@@ -41,6 +41,7 @@ private:
 
   // internal functions
   Type recursive_det( const Matrix<Type>& )const;
+  void assign_sub_matrix( Matrix<Type>&, Matrix<Type>&, int );
   void checkValid(int, int)const;
   void checkNumeric()const;
 
@@ -215,14 +216,13 @@ Type Matrix<Type>::recursive_det( const Matrix<Type>& B )const{
   Matrix<Type> submatrix( B.rows()-1, B.cols()-1 );
   for( int col_idx=0; col_idx < B.cols(); col_idx++ ){
     // setup submatrix
-    for( int subcol_idx=0; subcol_idx < B.cols(); subcol_idx++ ){
-      adjust = 0;
-      if( subcol_idx == col_idx ){
-        adjust = -1;
-        subcol_idx++;
-      }
-      for( int subrow_idx=0; subrow_idx < submatrix.rows(); subrow_idx++ ){
-        submatrix(subcol_idx+adjust, subrow_idx) = B.get( subcol_idx, subrow_idx+1 );
+    int t_c=-1;
+    for( int subcol_idx=0; subcol_idx < B.cols()-1; subcol_idx++ ){
+      t_c++;
+      if( subcol_idx == col_idx )
+        t_c++;
+      for( int subrow_idx=0; subrow_idx < B.rows()-1; subrow_idx++ ){
+        submatrix( subrow_idx, subcol_idx ) = B.get( subrow_idx+1, t_c );
       }
     }
     sum += B.get(0, col_idx) * negate * recursive_det(submatrix);

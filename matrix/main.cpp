@@ -1,6 +1,18 @@
 #include <iostream>
 #include "matrix.h"
 
+void submatrix( Matrix<int>&A, Matrix<int>& B, int col_idx ){
+  int t_c=-1;
+  for( int subcol_idx=0; subcol_idx < B.cols()-1; subcol_idx++ ){
+    t_c++;
+    if( subcol_idx == col_idx )
+      t_c++;
+    for( int subrow_idx=0; subrow_idx < B.rows()-1; subrow_idx++ ){
+      A( subrow_idx, subcol_idx ) = B( subrow_idx+1, t_c );
+    }
+  }
+}
+
 int main() {
 
   Matrix<int> A(3, 3);
@@ -15,8 +27,8 @@ int main() {
   A(2, 1) = 8;
   A(2, 2) = 9;
 
+  //std::cout << A.det() << std::endl;
   std::cout << A.det() << std::endl;
-
 
   /* // OG driver code
   Matrix<int> A(2, 2);

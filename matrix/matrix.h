@@ -203,7 +203,7 @@ std::ostream& operator<<(std::ostream& os, Matrix<Type>& mat){
 template <class Type>
 void Matrix<Type>::set( int row, int column, Type& value )const{
 
-  checkValid( row, column );
+  //checkValid( row, column );
 
   (*data[row])[column] = value;
 }
@@ -212,7 +212,7 @@ void Matrix<Type>::set( int row, int column, Type& value )const{
 template <class Type>
 Type Matrix<Type>::get( int row , int column )const{
 
-  checkValid( row, column );
+  //checkValid( row, column );
 
   return (*data[row])[column];
 

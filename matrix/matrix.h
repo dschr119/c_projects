@@ -35,7 +35,7 @@ private:
   void checkNumeric()const;
 
   // internal setters/getters
-  void set( int, int, Type )const;
+  void set( int, int, Type& )const;
   Type get( int, int )const;
 
   // internal data
@@ -201,7 +201,7 @@ std::ostream& operator<<(std::ostream& os, Matrix<Type>& mat){
 
 // set the value of the row,column member of this matrix
 template <class Type>
-void Matrix<Type>::set( int row, int column, Type value )const{
+void Matrix<Type>::set( int row, int column, Type& value )const{
 
   checkValid( row, column );
 

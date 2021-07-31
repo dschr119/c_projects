@@ -17,6 +17,8 @@ public:
   void resize( int, int );
   int rows()const{ return size[0]; }
   int cols()const{ return size[1]; }
+
+  // operations
   Type det()const{
     if( size[0] == size[1] )
       return recursive_det( *this );
@@ -25,10 +27,9 @@ public:
       throw;
     }
   }
-
-  // operations
   Type& operator()( int, int )const;
   Matrix<Type>& operator=( const Matrix<Type>& );
+  Matrix<Type> inverse()const;
 
   template <class Type0>
   friend Matrix<Type0> operator+( const Matrix<Type0>&, const Matrix<Type0>& );
@@ -41,7 +42,7 @@ private:
 
   // internal functions
   Type recursive_det( const Matrix<Type>& )const;
-  void assign_sub_matrix( Matrix<Type>&, Matrix<Type>&, int );
+  void getSubMatrix( Matrix<Type>&, const Matrix<Type>&, int, int )const;
   void checkValid(int, int)const;
   void checkNumeric()const;
 
@@ -207,29 +208,66 @@ std::ostream& operator<<(std::ostream& os, Matrix<Type>& mat){
 }
 
 template <class Type>
+void Matrix<Type>::getSubMatrix( Matrix<Type>& submatrix, const Matrix<Type>& B, int row_idx, int col_idx )const{
+  // setup submatrix
+  int t_c=-1;
+  for( int subcol_idx=0; subcol_idx < B.cols()-1; subcol_idx++ ){
+    t_c++;
+    if( subcol_idx == col_idx )
+      t_c++;
+    int t_r=-1;
+    for( int subrow_idx=0; subrow_idx < B.rows()-1; subrow_idx++ ){
+      t_r++;
+      if( subrow_idx == row_idx )
+        t_r++;
+      submatrix( subrow_idx, subcol_idx ) = B.get( t_r, t_c );
+    }
+  }
+}
+
+template <class Type>
 Type Matrix<Type>::recursive_det( const Matrix<Type>& B )const{
 
   if( B.rows() == 2 )
     return B.get(0, 0) * B.get(1, 1) - B.get(0, 1) * B.get(1, 0);
-  Type negate, sum, adjust;
+  Type negate, adjust;
+  Type sum;
   negate = 1; sum = 0;
   Matrix<Type> submatrix( B.rows()-1, B.cols()-1 );
   for( int col_idx=0; col_idx < B.cols(); col_idx++ ){
-    // setup submatrix
-    int t_c=-1;
-    for( int subcol_idx=0; subcol_idx < B.cols()-1; subcol_idx++ ){
-      t_c++;
-      if( subcol_idx == col_idx )
-        t_c++;
-      for( int subrow_idx=0; subrow_idx < B.rows()-1; subrow_idx++ ){
-        submatrix( subrow_idx, subcol_idx ) = B.get( subrow_idx+1, t_c );
-      }
-    }
+    getSubMatrix( submatrix, B, 0, col_idx );
     sum += B.get(0, col_idx) * negate * recursive_det(submatrix);
     negate *= -1;
   }
   return sum;
+}
 
+template <class Type>
+Matrix<Type> Matrix<Type>::inverse()const{
+  Type determinate = det();
+  if( determinate == 0 ){
+    std::cout << "cannot invert matrix of determinate 0" << std::endl;
+    throw;
+  }
+  Matrix<Type> result( size[0], size[1] );
+  result = *this;
+  // change result to minor and cofactor
+  Matrix<Type> submatrix( size[0]-1, size[1]-1 );
+  Type negate = 1;
+  for( int row=0; row < size[0]; row++ ){
+    for( int col=0; col < size[1]; col++ ){
+      getSubMatrix(submatrix, result, row, col);
+      result(row, col) = negate * recursive_det( submatrix );
+      negate *= -1;
+    }
+  }
+  // adjugate and return 1/det * result
+  Matrix<Type> copy(size[0], size[1]);
+  copy = result;
+  for( int row=0; row < result.rows(); row++ )
+    for( int col=0; col < result.cols(); col++ )
+      result(row, col) =  (copy.get(col, row) / determinate);
+  return result;
 }
 
 

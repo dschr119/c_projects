@@ -19,7 +19,7 @@ int main() {
   Matrix<int> C(2, 2);
   C = A * B;
 
-  std::cout << C(0, 0) << std::endl;
+  std::cout << C << std::endl;
 
   std::cout << "ran...\n";
 }

@@ -26,6 +26,8 @@ public:
   friend Matrix<Type0> operator+( const Matrix<Type0>&, const Matrix<Type0>& );
   template <class Type0>
   friend Matrix<Type0> operator*( const Matrix<Type0>&, const Matrix<Type0>& );
+  template <class Type0>
+  friend std::ostream& operator<<(std::ostream&, Matrix<Type0>&);
 
 private:
 
@@ -177,6 +179,23 @@ Matrix<Type> operator*( const Matrix<Type>& A, const Matrix<Type>& B ){
   return result;
 
 }
+
+// this function produces the osteam output when we print the matrix
+// it serves no purpose other than asthetic output 
+template <class Type>
+std::ostream& operator<<(std::ostream& os, Matrix<Type>& mat){
+  for( int row_idx=0; row_idx < mat.rows()-1; row_idx++ ){
+    for( int col_idx=0; col_idx < mat.cols()-1; col_idx++ )
+      os << mat(row_idx, col_idx) << ", ";
+    os << mat(row_idx, mat.cols()-1) << "\n";
+  }
+  for( int col_idx=0; col_idx < mat.cols()-1; col_idx++ )
+    os << mat(mat.rows()-1, col_idx) << ", ";
+  os << mat(mat.rows()-1, mat.cols()-1);
+
+	return os;
+}
+
 
 /// setters/getters
 

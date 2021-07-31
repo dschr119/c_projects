@@ -1,3 +1,4 @@
+/*
 #include "matrix.h"
 
 /// misc functions
@@ -25,10 +26,12 @@ void multiply( const Matrix& A, const Matrix& B, Matrix& result ){
 
 /// constructors/destructors
 
+template <class Type>
 Matrix::Matrix( int rows, int columns ){
   resize( rows, columns );
 }
 
+template <class Type>
 Matrix::~Matrix(){
   // delete pointers
   for( auto p : data ) delete p;
@@ -80,6 +83,7 @@ Type& Matrix::operator()( int row, int column )const{
 }
 
 
+template <class Type>
 Matrix& Matrix::operator=( const Matrix& B ){
 
   if( rows() != B.rows() || cols() != B.cols() ){
@@ -97,6 +101,7 @@ Matrix& Matrix::operator=( const Matrix& B ){
 
 
 // friend function to add two matrices
+template <class Type>
 Matrix operator+( const Matrix& A, const Matrix& B ){
 
   if( A.rows() != B.rows() || A.cols() != B.cols() ){
@@ -114,6 +119,7 @@ Matrix operator+( const Matrix& A, const Matrix& B ){
 }
 
 // friend function to multiply two matrices
+template <class Type>
 Matrix operator*( const Matrix& A, const Matrix& B ){
 
   if( A.cols() != B.rows() ){
@@ -154,6 +160,7 @@ Type Matrix::get( int row , int column )const{
 /// other class functions
 
 // checks if the given dimensions for a matrix are valid
+template <class Type>
 void Matrix::checkValid( int row, int column )const{
   if( row >= size[0] || column >= size[1] || row < 0 || column < 0 ){
     std::cout << "cannot access element (" << row << ", " << column << ")";
@@ -161,3 +168,4 @@ void Matrix::checkValid( int row, int column )const{
     throw;
   }
 }
+*/

@@ -16,7 +16,7 @@ int main() {
   B(1, 0) = 3;
   B(1, 1) = 4;
 
-  Matrix C(2, 2);
+  Matrix<int> C(2, 2);
   C = A * B;
 
   std::cout << C(0, 0) << std::endl;

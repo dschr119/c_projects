@@ -130,9 +130,9 @@ Type& Matrix<Type>::operator()( int row, int column )const{
 template <class Type>
 Matrix<Type>& Matrix<Type>::operator=( const Matrix<Type>& B ){
 
+  // resize current matrix to copy data
   if( rows() != B.rows() || cols() != B.cols() ){
-    std::cout << "cannot copy matrices of different sizes" << std::endl;
-    throw;
+    resize( B.rows(), B.cols() )
   }
 
   for(int r=0; r<rows(); r++)

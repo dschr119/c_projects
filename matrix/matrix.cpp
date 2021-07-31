@@ -6,7 +6,7 @@
 template <class Type>
 void multiply( const Matrix& A, const Matrix& B, Matrix& result ){
 
-  double sum;
+  Type sum;
 
   for( int row=0; row<result.rows(); row++ ){
     for( int col=0; col<result.cols(); col++ ){
@@ -26,7 +26,6 @@ void multiply( const Matrix& A, const Matrix& B, Matrix& result ){
 /// constructors/destructors
 
 Matrix::Matrix( int rows, int columns ){
-  is_numeric = checkNumeric()
   resize( rows, columns );
 }
 
@@ -60,7 +59,7 @@ void Matrix::resize( int rows, int columns ){
 
   // resize vector vector
   for(int r=0; r<rows; r++)
-    data.push_back( new std::vector<double> );
+    data.push_back( new std::vector<Type> );
 
   // resize each double vector
   for( auto row : data )
@@ -71,16 +70,16 @@ void Matrix::resize( int rows, int columns ){
 
 /// operators
 template <class Type>
-double& Matrix::operator()( int row, int column )const{
+Type& Matrix::operator()( int row, int column )const{
 
   checkValid(row, column);
 
-  double& address = data[row]->at(column);
+  Type& address = data[row]->at(column);
 
   return address;
 }
 
-template <class Type>
+
 Matrix& Matrix::operator=( const Matrix& B ){
 
   if( rows() != B.rows() || cols() != B.cols() ){
@@ -98,7 +97,6 @@ Matrix& Matrix::operator=( const Matrix& B ){
 
 
 // friend function to add two matrices
-template <class Type>
 Matrix operator+( const Matrix& A, const Matrix& B ){
 
   if( A.rows() != B.rows() || A.cols() != B.cols() ){
@@ -116,7 +114,6 @@ Matrix operator+( const Matrix& A, const Matrix& B ){
 }
 
 // friend function to multiply two matrices
-template <class Type>
 Matrix operator*( const Matrix& A, const Matrix& B ){
 
   if( A.cols() != B.rows() ){
@@ -137,7 +134,7 @@ Matrix operator*( const Matrix& A, const Matrix& B ){
 
 // set the value of the row,column member of this matrix
 template <class Type>
-void Matrix::set( int row, int column, double value )const{
+void Matrix::set( int row, int column, Type value )const{
 
   checkValid( row, column );
 
@@ -146,7 +143,7 @@ void Matrix::set( int row, int column, double value )const{
 
 // get the value of the row,column member of this matrix
 template <class Type>
-double Matrix::get( int row , int column )const{
+Type Matrix::get( int row , int column )const{
 
   checkValid( row, column );
 
@@ -157,29 +154,10 @@ double Matrix::get( int row , int column )const{
 /// other class functions
 
 // checks if the given dimensions for a matrix are valid
-template <class Type>
 void Matrix::checkValid( int row, int column )const{
   if( row >= size[0] || column >= size[1] || row < 0 || column < 0 ){
     std::cout << "cannot access element (" << row << ", " << column << ")";
     std::cout << " of a " << size[0] << " x " << size[1] << " matrix" << std::endl;
     throw;
-  }
-}
-
-// checks if the stored matrix type is
-// numeric and can perform operations
-template <class Type>
-void Matrix::checkNumeric()const{
-  try {
-    // perform +, -, *, /
-    Type a, b;
-    a += b;
-    b -= a;
-    a *= b;
-    b /= a;
-    return true;
-  }
-  catch (...) {
-    return false;
   }
 }

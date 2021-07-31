@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 
+template<class Type>
 class Matrix{
 
 public:
@@ -18,7 +19,7 @@ public:
   int cols()const{ return size[1]; }
 
   // operations
-  double& operator()( int, int )const;
+  Type& operator()( int, int )const;
   Matrix& operator=( const Matrix& );
 
   friend Matrix operator+( const Matrix&, const Matrix& );
@@ -27,12 +28,15 @@ public:
 private:
 
   void checkValid(int, int)const;
+  void checkNumeric()const;
 
   // internal setters/getters
-  void set( int, int, double )const;
+  void set( int, int, Type )const;
   double get( int, int )const;
 
-  std::vector<std::vector<double>*> data;
+  // internal data
+  std::vector<std::vector<Type>*> data;
   int size[2] = {0, 0};
+  bool is_numeric = NULL;
 
 };

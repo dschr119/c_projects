@@ -17,6 +17,14 @@ public:
   void resize( int, int );
   int rows()const{ return size[0]; }
   int cols()const{ return size[1]; }
+  Type det()const{
+    if( size[0] == size[1] )
+      return recursive_det( *this );
+    else{
+      std::cout << "cannot get determinate of non-square matrix" << std::endl;
+      throw;
+    }
+  }
 
   // operations
   Type& operator()( int, int )const;
@@ -31,6 +39,8 @@ public:
 
 private:
 
+  // internal functions
+  Type recursive_det( const Matrix<Type>& )const;
   void checkValid(int, int)const;
   void checkNumeric()const;
 
@@ -120,7 +130,6 @@ template <class Type>
 Type& Matrix<Type>::operator()( int row, int column )const{
 
   checkValid(row, column);
-
   Type& address = data[row]->at(column);
 
   return address;
@@ -132,7 +141,7 @@ Matrix<Type>& Matrix<Type>::operator=( const Matrix<Type>& B ){
 
   // resize current matrix to copy data
   if( rows() != B.rows() || cols() != B.cols() ){
-    resize( B.rows(), B.cols() )
+    resize( B.rows(), B.cols() );
   }
 
   for(int r=0; r<rows(); r++)
@@ -194,6 +203,33 @@ std::ostream& operator<<(std::ostream& os, Matrix<Type>& mat){
   os << mat(mat.rows()-1, mat.cols()-1) << "]";
 
 	return os;
+}
+
+template <class Type>
+Type Matrix<Type>::recursive_det( const Matrix<Type>& B )const{
+
+  if( B.rows() == 2 )
+    return B.get(0, 0) * B.get(1, 1) - B.get(0, 1) * B.get(1, 0);
+  Type negate, sum, adjust;
+  negate = 1; sum = 0;
+  Matrix<Type> submatrix( B.rows()-1, B.cols()-1 );
+  for( int col_idx=0; col_idx < B.cols(); col_idx++ ){
+    // setup submatrix
+    for( int subcol_idx=0; subcol_idx < B.cols(); subcol_idx++ ){
+      adjust = 0;
+      if( subcol_idx == col_idx ){
+        adjust = -1;
+        subcol_idx++;
+      }
+      for( int subrow_idx=0; subrow_idx < submatrix.rows(); subrow_idx++ ){
+        submatrix(subcol_idx+adjust, subrow_idx) = B.get( subcol_idx, subrow_idx+1 );
+      }
+    }
+    sum += B.get(0, col_idx) * negate * recursive_det(submatrix);
+    negate *= -1;
+  }
+  return sum;
+
 }
 
 

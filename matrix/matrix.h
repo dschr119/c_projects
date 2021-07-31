@@ -140,7 +140,6 @@ Matrix<Type>& Matrix<Type>::operator=( const Matrix<Type>& B ){
       set( r, c, B(r, c) );
 
   return *this;
-
 }
 
 
@@ -181,9 +180,10 @@ Matrix<Type> operator*( const Matrix<Type>& A, const Matrix<Type>& B ){
 }
 
 // this function produces the osteam output when we print the matrix
-// it serves no purpose other than asthetic output 
+// it serves no purpose other than asthetic output
 template <class Type>
 std::ostream& operator<<(std::ostream& os, Matrix<Type>& mat){
+  os << "[";
   for( int row_idx=0; row_idx < mat.rows()-1; row_idx++ ){
     for( int col_idx=0; col_idx < mat.cols()-1; col_idx++ )
       os << mat(row_idx, col_idx) << ", ";
@@ -191,7 +191,7 @@ std::ostream& operator<<(std::ostream& os, Matrix<Type>& mat){
   }
   for( int col_idx=0; col_idx < mat.cols()-1; col_idx++ )
     os << mat(mat.rows()-1, col_idx) << ", ";
-  os << mat(mat.rows()-1, mat.cols()-1);
+  os << mat(mat.rows()-1, mat.cols()-1) << "]";
 
 	return os;
 }

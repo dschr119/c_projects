@@ -3,6 +3,7 @@
 
 int main() {
 
+  /* // OG driver code
   Matrix<int> A(2, 2);
   Matrix<int> B(2, 2);
 
@@ -20,6 +21,5 @@ int main() {
   C = A * B;
 
   std::cout << C << std::endl;
-
-  std::cout << "ran...\n";
+  */
 }
